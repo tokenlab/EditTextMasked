@@ -42,3 +42,5 @@ For default, the replaceable symbol is "#", but you can change it whenever you w
     formatedString.getRawText()
 ```
 
+## Author
+[ludmilamm](https://github.com/ludmilamm)
