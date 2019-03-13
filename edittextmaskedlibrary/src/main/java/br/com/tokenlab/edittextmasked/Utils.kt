@@ -12,6 +12,10 @@ fun String.setMask(mask: String, replaceableSymbol: Char = '#'): String {
     return applyMaskToStaticText(this.getRawText(), mask, replaceableSymbol)
 }
 
+fun EditText.setMask(mask: String, replaceableSymbol: Char = '#') {
+    addTextChangedListener(MaskTextWatcher(listOf(mask), this, replaceableSymbol))
+}
+
 fun EditText.setMasks(masks: List<String>, replaceableSymbol: Char = '#') {
     addTextChangedListener(MaskTextWatcher(masks, this, replaceableSymbol))
 }
