@@ -6,8 +6,6 @@ import android.widget.EditText
 import java.util.regex.Pattern
 
 /**
- * Author: Ludmila Maschio (android developer @ Tokenlab)
- *
  * This class was made to format the inserted texts in the configured mask.
  * Accept any type of mask.
  *

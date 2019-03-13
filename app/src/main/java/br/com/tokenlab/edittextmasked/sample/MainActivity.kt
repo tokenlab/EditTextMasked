@@ -1,21 +1,28 @@
 package br.com.tokenlab.edittextmasked.sample
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
-import android.view.View
+import android.text.SpannableStringBuilder
 import br.com.tokenlab.edittextmasked.R
+import br.com.tokenlab.edittextmasked.setMask
+import br.com.tokenlab.edittextmasked.setMasks
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
 
-    override fun onCreateView(parent: View?, name: String?, context: Context?, attrs: AttributeSet?): View {
-        return super.onCreateView(parent, name, context, attrs)
+        editTextPhone.setMask(mask = "(**) *****-****", replaceableSymbol = '*')
+        editTextPreFilledPhone.setMask("(##) #####-####")
+        editTextDate.setMask("##/##/####")
+        editTextDocument.setMask("###.###.###-##")
+        editTextMultipleDocuments.setMasks(listOf("###.###.###-##", "##.###.###/####-##"))
+
+        editTextPreFilledPhone.text = SpannableStringBuilder.valueOf("99123456789")
+        val someDate = "13032019"
+        textViewDate.text = someDate.setMask("##/##/####")
     }
 }
