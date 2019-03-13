@@ -39,13 +39,20 @@ class MaskTextWatcher(
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         val string = s.toString()
+
         if (string != lastVersion) {
             // Check whether the text was pre-populated OR the cursor is at the end
             if ((start == 0 && string.length > 1) || (editText.selectionStart < string.length)) {
                 applyMaskForPreFilledText(string)
             } else {
-                // Check if isn't backspace
+                // Check if it isn't backspace
                 if (string.length != start) {
+                    // Avoid special characters
+                    if (string.isNotEmpty() && !string.last().isLetterOrDigit()) {
+                        lastVersion = string.dropLast(1)
+                        return
+                    }
+
                     // If the last character erased has been a symbol, it restructures the string
                     if (lastDigitErasedWasSymbol) {
                         applyMaskAfterSymbolErased(string)
