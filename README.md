@@ -1,6 +1,6 @@
 # EditTextMasked
-A library to put masks on EditTexts and in any String.
-Support multiple mask on the same EditText.
+A library to put masks on EditTexts and in any String.  
+Support multiple mask on the same EditText.  
 Does not support currency masks.
 
 ## Installation
