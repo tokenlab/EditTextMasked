@@ -7,16 +7,15 @@ Does not support currency masks.
 
 ```
     allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+        repositories {
+	    ...
+	    maven { url 'https://jitpack.io' }
 	}
+    }
 ```
 
 ```
-    // app module
-	dependencies {
+    dependencies {
         implementation 'com.github.tokenlab:EditTextMasked:VERSION'
     }
 ```
