@@ -1,6 +1,8 @@
 package br.com.tokenlab.edittextmasked
 
+import android.text.SpannableStringBuilder
 import android.widget.EditText
+import java.util.*
 import java.util.regex.Pattern
 
 fun String.getRawText(): String {
@@ -18,6 +20,19 @@ fun EditText.setMask(mask: String, replaceableSymbol: Char = '#') {
 
 fun EditText.setMasks(masks: List<String>, replaceableSymbol: Char = '#') {
     addTextChangedListener(MaskTextWatcher(masks, this, replaceableSymbol))
+}
+
+fun EditText.addCurrencyMask(locale: Locale) {
+    addTextChangedListener(CurrencyMaskTextWatcher(this, locale))
+
+    setOnFocusChangeListener { _, hasFocus ->
+        if (hasFocus) {
+            if (text.isEmpty())
+                text = SpannableStringBuilder.valueOf("0")
+            if (text.isNotEmpty())
+                setSelection(text.length)
+        }
+    }
 }
 
 fun applyMaskToStaticText(string: String, mask: String, replaceableSymbol: Char): String {

@@ -4,5 +4,6 @@
     <string name="pre_filled_phone">Pre-filled phone</string>
     <string name="date">Date</string>
     <string name="document">Document</string>
-    <string name="multipleDocuments">Multiple documents</string>
+    <string name="multiple_documents">Multiple documents</string>
+    <string name="currency">Moeda</string>
 </resources>

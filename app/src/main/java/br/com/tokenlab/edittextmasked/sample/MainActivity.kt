@@ -1,15 +1,16 @@
 package br.com.tokenlab.edittextmasked.sample
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.text.SpannableStringBuilder
 import br.com.tokenlab.edittextmasked.R
+import br.com.tokenlab.edittextmasked.addCurrencyMask
 import br.com.tokenlab.edittextmasked.setMask
 import br.com.tokenlab.edittextmasked.setMasks
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         editTextDate.setMask("##/##/####")
         editTextDocument.setMask("###.###.###-##")
         editTextMultipleDocuments.setMasks(listOf("###.###.###-##", "##.###.###/####-##"))
+        editTextCurrency.addCurrencyMask(Locale("pt", "BR"))
 
         editTextPreFilledPhone.text = SpannableStringBuilder.valueOf("99123456789")
         val someDate = "13032019"
