@@ -1,7 +1,6 @@
 # EditTextMasked
 A library to put masks on EditTexts and in any String.  
 Support multiple mask on the same EditText.  
-Does not support currency masks.
 
 ## Installation
 
@@ -25,6 +24,7 @@ Does not support currency masks.
 ```
     editTextDocument.setMask("###.###.###-##")
     editTextMultipleDocuments.setMasks(listOf("###.###.###-##", "##.###.###/####-##"))
+    editTextMoney.addCurrencyMask(Locale("pt", "BR))
 
     val someDate = "13032019"
     textViewDate.text = someDate.setMask("##/##/####")
