@@ -50,4 +50,9 @@ class TextWatcherManager(val editText: EditText) {
             }
         }
     }
+
+    fun removeAllMaskTextWatcher() {
+        editText.removeTextChangedListener(currencyMaskTextWatcher)
+        editText.removeTextChangedListener(maskTextWatcher)
+    }
 }

@@ -15,6 +15,7 @@ private fun EditText.initTextWatcherManager(): TextWatcherManager {
 
     addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(v: View?) {
+            textWatcherManager.removeAllMaskTextWatcher()
             textWatcherManagers.remove(textWatcherManager)
         }
 
