@@ -1,9 +1,28 @@
 package br.com.tokenlab.edittextmasked
 
-import android.text.SpannableStringBuilder
+import android.view.View
 import android.widget.EditText
+import java.math.BigDecimal
+import java.text.NumberFormat
 import java.util.*
 import java.util.regex.Pattern
+
+private val textWatcherManagers: MutableList<TextWatcherManager> = mutableListOf()
+
+private fun EditText.initTextWatcherManager(): TextWatcherManager {
+    val textWatcherManager = textWatcherManagers.firstOrNull { it.editText.id == this.id }
+        ?: TextWatcherManager(this).apply { textWatcherManagers.add(this) }
+
+    addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+        override fun onViewDetachedFromWindow(v: View?) {
+            textWatcherManagers.remove(textWatcherManager)
+        }
+
+        override fun onViewAttachedToWindow(v: View?) {}
+    })
+
+    return textWatcherManager
+}
 
 fun String.getRawText(): String {
     val pattern = Pattern.compile("[^a-zA-Z0-9]")
@@ -15,24 +34,11 @@ fun String.setMask(mask: String, replaceableSymbol: Char = '#'): String {
 }
 
 fun EditText.setMask(mask: String, replaceableSymbol: Char = '#') {
-    addTextChangedListener(MaskTextWatcher(listOf(mask), this, replaceableSymbol))
+    initTextWatcherManager().setMask(mask, replaceableSymbol)
 }
 
 fun EditText.setMasks(masks: List<String>, replaceableSymbol: Char = '#') {
-    addTextChangedListener(MaskTextWatcher(masks, this, replaceableSymbol))
-}
-
-fun EditText.addCurrencyMask(locale: Locale) {
-    addTextChangedListener(CurrencyMaskTextWatcher(this, locale))
-
-    setOnFocusChangeListener { _, hasFocus ->
-        if (hasFocus) {
-            if (text.isEmpty())
-                text = SpannableStringBuilder.valueOf("0")
-            if (text.isNotEmpty())
-                setSelection(text.length)
-        }
-    }
+    initTextWatcherManager().setMasks(masks, replaceableSymbol)
 }
 
 fun applyMaskToStaticText(string: String, mask: String, replaceableSymbol: Char): String {
@@ -51,4 +57,24 @@ fun applyMaskToStaticText(string: String, mask: String, replaceableSymbol: Char)
         result = result.takeWhile { it != replaceableSymbol }
         result
     } else ""
+}
+
+fun EditText.addCurrencyMask(locale: Locale) {
+    initTextWatcherManager().addCurrencyMask(locale)
+}
+
+fun BigDecimal.formatAsCurrency(locale: Locale): String {
+    val currencyFormat = NumberFormat.getCurrencyInstance(locale).format(this)
+    return currencyFormat.take(2) + " " + currencyFormat.takeLast(currencyFormat.length - 2)
+}
+
+fun String.removeCurrencyMask(): BigDecimal? {
+    return try {
+        val value = replace("[^0-9,]".toRegex(), "").replace(",", ".").toBigDecimal()
+        if (value < BigDecimal.valueOf(0.01))
+            BigDecimal.ZERO
+        else value
+    } catch (e: Exception) {
+        null
+    }
 }
