@@ -38,7 +38,8 @@ class CurrencyMaskTextWatcher(private val editText: EditText, private val locale
 
     private fun getCurrencyFormatted(value: Double): String {
         return with(NumberFormat.getCurrencyInstance(locale).format(value)) {
-            return@with take(2) + " " + takeLast(length - 2)
+            val indexOfFirstDigit = indexOfFirst { it.isDigit() }
+            return@with take(indexOfFirstDigit) + " " + substring(indexOfFirstDigit)
         }
     }
 }

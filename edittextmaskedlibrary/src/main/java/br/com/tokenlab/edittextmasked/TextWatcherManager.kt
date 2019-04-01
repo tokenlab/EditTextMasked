@@ -13,30 +13,30 @@ class TextWatcherManager(val editText: EditText) {
     private lateinit var currencyMaskTextWatcher: CurrencyMaskTextWatcher
     private lateinit var maskTextWatcher: MaskTextWatcher
 
-    private fun removeMask() {
+    private fun removePreviousMaskTextWatcher() {
         if (this::maskTextWatcher.isInitialized)
             editText.removeTextChangedListener(maskTextWatcher)
     }
 
     fun setMask(mask: String, replaceableSymbol: Char = '#') {
-        removeMask()
+        removePreviousMaskTextWatcher()
         maskTextWatcher = MaskTextWatcher(listOf(mask), editText, replaceableSymbol)
         editText.addTextChangedListener(maskTextWatcher)
     }
 
     fun setMasks(masks: List<String>, replaceableSymbol: Char = '#') {
-        removeMask()
+        removePreviousMaskTextWatcher()
         maskTextWatcher = MaskTextWatcher(masks, editText, replaceableSymbol)
         editText.addTextChangedListener(maskTextWatcher)
     }
 
-    private fun removeCurrencyMask() {
+    private fun removePreviousCurrencyMaskTextWatcher() {
         if (this::currencyMaskTextWatcher.isInitialized)
             editText.removeTextChangedListener(currencyMaskTextWatcher)
     }
 
     fun addCurrencyMask(locale: Locale) {
-        removeCurrencyMask()
+        removePreviousCurrencyMaskTextWatcher()
         currencyMaskTextWatcher = CurrencyMaskTextWatcher(editText, locale)
         with(editText) {
             addTextChangedListener(currencyMaskTextWatcher)
