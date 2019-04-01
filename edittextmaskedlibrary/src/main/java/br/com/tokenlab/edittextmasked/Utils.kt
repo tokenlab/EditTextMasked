@@ -63,11 +63,6 @@ fun EditText.addCurrencyMask(locale: Locale) {
     initTextWatcherManager().addCurrencyMask(locale)
 }
 
-fun BigDecimal.formatAsCurrency(locale: Locale): String {
-    val currencyFormat = NumberFormat.getCurrencyInstance(locale).format(this)
-    return currencyFormat.take(2) + " " + currencyFormat.takeLast(currencyFormat.length - 2)
-}
-
 fun String.removeCurrencyMask(): BigDecimal? {
     return try {
         val value = replace("[^0-9,]".toRegex(), "").replace(",", ".").toBigDecimal()
