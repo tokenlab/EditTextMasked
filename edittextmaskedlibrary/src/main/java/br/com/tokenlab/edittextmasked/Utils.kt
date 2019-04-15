@@ -10,9 +10,11 @@ import java.util.regex.Pattern
 private val textWatcherManagers: MutableList<TextWatcherManager> = mutableListOf()
 
 private fun EditText.initTextWatcherManager(): TextWatcherManager {
+    // Find or instantiate a TextWatcherManager
     val textWatcherManager = textWatcherManagers.firstOrNull { it.editText.id == this.id }
         ?: TextWatcherManager(this).apply { textWatcherManagers.add(this) }
 
+    // Remove the text watchers
     addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
         override fun onViewDetachedFromWindow(v: View?) {
             textWatcherManager.removeAllMaskTextWatcher()
@@ -23,23 +25,6 @@ private fun EditText.initTextWatcherManager(): TextWatcherManager {
     })
 
     return textWatcherManager
-}
-
-fun String.getRawText(): String {
-    val pattern = Pattern.compile("[^a-zA-Z0-9]")
-    return pattern.matcher(this).replaceAll("")
-}
-
-fun String.setMask(mask: String, replaceableSymbol: Char = '#'): String {
-    return applyMaskToStaticText(this.getRawText(), mask, replaceableSymbol)
-}
-
-fun EditText.setMask(mask: String, replaceableSymbol: Char = '#') {
-    initTextWatcherManager().setMask(mask, replaceableSymbol)
-}
-
-fun EditText.setMasks(masks: List<String>, replaceableSymbol: Char = '#') {
-    initTextWatcherManager().setMasks(masks, replaceableSymbol)
 }
 
 fun applyMaskToStaticText(string: String, mask: String, replaceableSymbol: Char): String {
@@ -60,11 +45,42 @@ fun applyMaskToStaticText(string: String, mask: String, replaceableSymbol: Char)
     } else ""
 }
 
+fun String.getRawText(): String {
+    val pattern = Pattern.compile("[^a-zA-Z0-9]")
+    return pattern.matcher(this).replaceAll("")
+}
+
+fun String.setMask(mask: String, replaceableSymbol: Char = '#'): String {
+    return applyMaskToStaticText(this.getRawText(), mask, replaceableSymbol)
+}
+
+fun EditText.setMask(mask: String, replaceableSymbol: Char = '#') {
+    initTextWatcherManager().setMask(mask, replaceableSymbol)
+}
+
+fun EditText.setMasks(masks: List<String>, replaceableSymbol: Char = '#') {
+    initTextWatcherManager().setMasks(masks, replaceableSymbol)
+}
+
+fun getFormattedCurrency(locale: Locale, value: Any): String {
+    // Get the currency string and add space if it doesn't contains
+    return try {
+        with(NumberFormat.getCurrencyInstance(locale).format(value)) {
+            if (!contains(" ")) {
+                val indexOfFirstDigit = indexOfFirst { it.isDigit() }
+                take(indexOfFirstDigit) + " " + substring(indexOfFirstDigit)
+            } else this
+        }
+    } catch (e: Exception) {
+        ""
+    }
+}
+
 fun EditText.addCurrencyMask(locale: Locale) {
     initTextWatcherManager().addCurrencyMask(locale)
 }
 
-fun String.removeCurrencyMask(): BigDecimal? {
+fun String.currencyToBigDecimal(): BigDecimal? {
     return try {
         val value = replace("[^0-9,]".toRegex(), "").replace(",", ".").toBigDecimal()
         if (value < BigDecimal.valueOf(0.01))
@@ -73,4 +89,20 @@ fun String.removeCurrencyMask(): BigDecimal? {
     } catch (e: Exception) {
         null
     }
+}
+
+fun String.currencyToDouble(): Double? {
+    return try {
+        replace("[^0-9,]".toRegex(), "").replace(",", ".").toDouble()
+    } catch (e: Exception) {
+        null
+    }
+}
+
+fun BigDecimal.formatAsCurrency(locale: Locale): String {
+    return getFormattedCurrency(locale, this)
+}
+
+fun Double.formatAsCurrency(locale: Locale): String {
+    return getFormattedCurrency(locale, this)
 }

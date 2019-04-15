@@ -3,12 +3,17 @@ package br.com.tokenlab.edittextmasked
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-import java.text.NumberFormat
 import java.util.*
 import java.util.regex.Pattern
 
+/**
+ *  This class transforms the inserted string to currency mask
+ *
+ *  @param editText EditText that will receive the currency mask
+ *  @param locale Locale to format the currency with the desired symbol
+ */
 class CurrencyMaskTextWatcher(private val editText: EditText, private val locale: Locale) : TextWatcher {
-    private val emptyValue = getCurrencyFormatted(0.0)
+    private val emptyValue = getFormattedCurrency(locale, 0.0)
     private val notNumbersPattern = Pattern.compile("[^0-9]")
     private var currentValue = ""
 
@@ -24,22 +29,12 @@ class CurrencyMaskTextWatcher(private val editText: EditText, private val locale
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         if (s.toString() != currentValue) {
-            val cleanString = notNumbersPattern.matcher(s).replaceAll("")
-            var formatted = emptyValue
+            val onlyNumbers = notNumbersPattern.matcher(s).replaceAll("")
 
-            if (cleanString.isNotEmpty()) {
-                val parsed = cleanString.toDouble()
-                formatted = getCurrencyFormatted(parsed / 100)
-            }
-
-            currentValue = formatted
-        }
-    }
-
-    private fun getCurrencyFormatted(value: Double): String {
-        return with(NumberFormat.getCurrencyInstance(locale).format(value)) {
-            val indexOfFirstDigit = indexOfFirst { it.isDigit() }
-            return@with take(indexOfFirstDigit) + " " + substring(indexOfFirstDigit)
+            currentValue = if (onlyNumbers.isNotEmpty()) {
+                val parsed = onlyNumbers.toDouble()
+                getFormattedCurrency(locale, parsed / 100)
+            } else emptyValue
         }
     }
 }

@@ -7,10 +7,12 @@ import java.util.regex.Pattern
 
 /**
  * This class was made to format the inserted texts in the configured mask.
- * Accept any type of mask.
+ * Accept any type of mask, except currency mask (@see CurrencyMaskTextWatcher).
  *
  * Receive an array of masks:
  * @param masks ##/##; ##/##/####; #### #### #### #### etc.
+ * @param editText EditText that will receive the mask
+ * @param replaceableSymbol mask symbol that will be replaced
  */
 class MaskTextWatcher(
     masks: List<String>,
