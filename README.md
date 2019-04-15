@@ -24,7 +24,15 @@ Support multiple mask on the same EditText.
 ```
     editTextDocument.setMask("###.###.###-##")
     editTextMultipleDocuments.setMasks(listOf("###.###.###-##", "##.###.###/####-##"))
-    editTextMoney.addCurrencyMask(Locale("pt", "BR))
+    editTextCurrency.addCurrencyMask(Locale("pt", "BR"))
+
+    editTextPreFilledPhone.text = SpannableStringBuilder.valueOf("99123456789")
+
+    textViewBigDecimal.text = BigDecimal.valueOf(234.34).formatAsCurrency(Locale("en", "US"))
+    val bigDecimal = textViewBigDecimal.text.currencyToBigDecimal()
+    
+    textViewDouble.text = 234.34.formatAsCurrency(Locale("pt", "BR"))
+    val double = textViewDouble.text.currencyToDouble()
 
     val someDate = "13032019"
     textViewDate.text = someDate.setMask("##/##/####")
