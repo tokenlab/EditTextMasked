@@ -71,7 +71,7 @@ fun getFormattedCurrency(locale: Locale, value: Any): String {
                 take(indexOfFirstDigit) + " " + substring(indexOfFirstDigit)
             } else this
         }
-    } catch (e: Exception) {
+    } catch (e: IllegalArgumentException) {
         ""
     }
 }
@@ -86,7 +86,7 @@ fun String.currencyToBigDecimal(): BigDecimal? {
         if (value < BigDecimal.valueOf(0.01))
             BigDecimal.ZERO
         else value
-    } catch (e: Exception) {
+    } catch (e: NumberFormatException) {
         null
     }
 }
@@ -94,7 +94,7 @@ fun String.currencyToBigDecimal(): BigDecimal? {
 fun String.currencyToDouble(): Double? {
     return try {
         replace("[^0-9,]".toRegex(), "").replace(",", ".").toDouble()
-    } catch (e: Exception) {
+    } catch (e: NumberFormatException) {
         null
     }
 }
