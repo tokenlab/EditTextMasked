@@ -1,30 +1,15 @@
 package br.com.tokenlab.edittextmasked
 
-import android.view.View
 import android.widget.EditText
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 import java.util.regex.Pattern
 
-private val textWatcherManagers: MutableList<TextWatcherManager> = mutableListOf()
-
 private fun EditText.initTextWatcherManager(): TextWatcherManager {
-    // Find or instantiate a TextWatcherManager
-    val textWatcherManager = textWatcherManagers.firstOrNull { it.editText.id == this.id }
-        ?: TextWatcherManager(this).apply { textWatcherManagers.add(this) }
-
-    // Remove the text watchers
-    addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-        override fun onViewDetachedFromWindow(v: View?) {
-            textWatcherManager.removeAllMaskTextWatcher()
-            textWatcherManagers.remove(textWatcherManager)
-        }
-
-        override fun onViewAttachedToWindow(v: View?) {}
-    })
-
-    return textWatcherManager
+    // Check if the EditText already have a manager, if not, add as tag
+    return getTag(R.id.TAG_TEXT_WATCHER_MANAGER)?.let { it as TextWatcherManager }
+        ?: TextWatcherManager(this).apply { setTag(R.id.TAG_TEXT_WATCHER_MANAGER, this) }
 }
 
 fun applyMaskToStaticText(string: String, mask: String, replaceableSymbol: Char): String {
